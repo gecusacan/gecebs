@@ -32,7 +32,7 @@ http://localhost:3000/api/org.gec.ebs.WellShipment?filter=%7B%22shipmentId%22%3A
 
 
 
-submitting SENSRO reading :
+submitting SENSOR reading :
 
 curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{ \ 
    "$class": "org.gec.ebs.SensorReading", \ 
