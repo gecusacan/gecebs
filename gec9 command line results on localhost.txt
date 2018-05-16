@@ -1,0 +1,48 @@
+
+----------------------------------- 15:49:36
+letubert@LEONs-MacBook-Pro:~/gecebs9-network$ curl -X GET --header 'Accept: application/json' 'http://localhost:3000/api/org.gec.ebs.WellOwner'
+[{"$class":"org.gec.ebs.WellOwner","email":"owner@email.com","address":{"$class":"org.gec.ebs.Address","country":"CAN"}}]
+--------------------------------------------------------------------------------------------------------------------------------------
+letubert@LEONs-MacBook-Pro:~/gecebs9-network$ curl -X GET --header 'Accept: application/json' 'http://localhost:3000/api/org.gec.ebs.WellShipment'
+[{"$class":"org.gec.ebs.WellShipment","shipmentId":"WSHIP_001","owner":{"$class":"org.gec.ebs.WellOwner","email":"owner@email.com","address":{"$class":"org.gec.ebs.Address","country":"CAN"}},"wellcontract":"resource:org.gec.ebs.WellContract#WCON_001","sensorReadings":[]}]
+-------------------------------------------------------------------------------------------------------------------------------------
+letubert@LEONs-MacBook-Pro:~/gecebs9-network$ curl -X GET --header 'Accept: application/json' 'http://localhost:3000/api/org.gec.ebs.WellOperator'
+[{"$class":"org.gec.ebs.WellOperator","email":"welloperator@email.com","address":{"$class":"org.gec.ebs.Address","city":"NYC","country":"USA","postalcode":"10001"}}]-----------------------------------------------------------
+
+letubert@LEONs-MacBook-Pro:~/gecebs9-network$ 
+
+
+
+letubert@LEONs-MacBook-Pro:~/gecebs9-network$ curl -X GET --header 'Accept: application/json' 'http://localhost:3000/api/system/ping'
+
+{"version":"0.19.2","participant":"org.hyperledger.composer.system.NetworkAdmin#admin","identity":"org.hyperledger.composer.system.Identity#663e8b017c6db613815fe320b9b2a2225d55f6b0dc7c3ffe1096412c3067212e"}
+
+
+
+GET:
+
+in the filter put this:
+{"shipmentId":"WSHIP_001"}
+
+it will generate this:
+Curl
+curl -X GET --header 'Accept: application/json' 'http://localhost:3000/api/org.gec.ebs.WellShipment?filter=%7B%22shipmentId%22%3A%22WSHIP_001%22%7D'
+Request URL
+http://localhost:3000/api/org.gec.ebs.WellShipment?filter=%7B%22shipmentId%22%3A%22WSHIP_001%22%7D
+
+
+
+submitting SENSRO reading :
+
+curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{ \ 
+   "$class": "org.gec.ebs.SensorReading", \ 
+   "fieldtimePTorNPTFlagYesNo": "PT", \ 
+   "fieldTimeStamp": "2018-05-14T20:17:19.340Z", \ 
+   "wellshipment": "WSHIP_001" \ 
+  \ 
+   ,"timestamp": "2018-05-14T20:17:19.340Z" \ 
+ }' 'http://localhost:3000/api/org.gec.ebs.SensorReading'
+
+
+
+

@@ -1,0 +1,246 @@
+REST APIs
+started localhost:3000
+
+1) step checking that we see nothing for WellContract
+
+curl -X GET --header 'Accept: application/json' 'http://0.0.0.0:3000/api/org.gec.ebs.WellContract'
+or
+http://0.0.0.0:3000/api/org.gec.ebs.WellContract
+
+
+Response Body
+[]
+Response Code
+200
+
+-----------------------------------------------------------
+2) step checking that we see nothing for WellOperator   
+
+
+curl -X GET --header 'Accept: application/json' 'http://0.0.0.0:3000/api/org.gec.ebs.WellOperator'
+Request URL
+http://0.0.0.0:3000/api/org.gec.ebs.WellOperator
+
+Response Body
+[]
+Response Code
+200
+
+------------------------------------------------------------------------
+3) WellShipment
+
+curl -X GET --header 'Accept: application/json' 'http://0.0.0.0:3000/api/org.gec.ebs.WellShipment'
+Request URL
+http://0.0.0.0:3000/api/org.gec.ebs.WellShipment
+
+Response Body
+[]
+Response Code
+200
+
+---------------------------------------------------------------
+
+4) WellOwner
+
+curl -X GET --header 'Accept: application/json' 'http://0.0.0.0:3000/api/org.gec.ebs.WellOwner'
+Request URL
+http://0.0.0.0:3000/api/org.gec.ebs.WellOwner
+Response Body
+[]
+Response Code
+200
+
+--------------------------------------------------------------------------------------------
+5)	executing transaction
+
+
+curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{}' 'http://0.0.0.0:3000/api/org.gec.ebs.SetupDemo'
+Request URL
+http://0.0.0.0:3000/api/org.gec.ebs.SetupDemo
+Response Body
+{
+  "$class": "org.gec.ebs.SetupDemo",
+  "transactionId": "af6b715d757618af6665ca8afb6156b2ada793f4645742acc3e89649452e96f3"
+}
+Response Code
+200
+
+------------------------------------------------------------------------------------------
+6) checking again WellContract
+
+request:
+	http://0.0.0.0:3000/api/org.gec.ebs.WellContract
+response:
+	[{"$class":"org.gec.ebs.WellContract","contractId":"WCON_001","activestatus":true}]
+------------------------------------------------------------------------------------------
+7) checking again WellOwner
+
+request:
+	http://0.0.0.0:3000/api/org.gec.ebs.WellOwner
+response:
+	[{"$class":"org.gec.ebs.WellOwner","email":"owner@email.com","address":{"$class":"org.gec.ebs.Address","country":"CAN"}}]
+
+
+8) checking again WellShipment
+
+curl -X GET --header 'Accept: application/json' 'http://0.0.0.0:3000/api/org.gec.ebs.WellShipment'
+
+
+response:
+[{"$class":"org.gec.ebs.WellShipment","shipmentId":"WSHIP_001","owner":{"$class":"org.gec.ebs.WellOwner","email":"owner@email.com","address":{"$class":"org.gec.ebs.Address","country":"CAN"}},"wellcontract":"resource:org.gec.ebs.WellContract#WCON_001","sensorReadings":[]}]
+
+
+9) checking again WellOperator   
+url to check:
+http://0.0.0.0:3000/api/org.gec.ebs.WellOperator
+
+
+curl -X GET --header 'Accept: application/json' 'http://0.0.0.0:3000/api/org.gec.ebs.WellOperator'
+Request URL
+http://0.0.0.0:3000/api/org.gec.ebs.WellOperator
+
+
+
+response:
+[{"$class":"org.gec.ebs.WellOperator","email":"welloperator@email.com","address":{"$class":"org.gec.ebs.Address","city":"NYC","country":"USA","postalcode":"10001"}}]
+
+
+
+------------------------------------------------------------------------------------------
+DELETING a shipment :
+
+Curl
+curl -X DELETE --header 'Accept: application/json' 'http://0.0.0.0:3000/api/org.gec.ebs.WellShipment/WSHIP_001'
+Request URL
+http://0.0.0.0:3000/api/org.gec.ebs.WellShipment/WSHIP_001
+Response Body
+no content
+Response Code
+204
+meaning: 204 No Content
+The server successfully processed the request and is not returning any content.
+
+------------------------
+curl -X DELETE --header 'Accept: application/json' 'http://0.0.0.0:3000/api/org.gec.ebs.WellContract/WCON_001'
+
+
+
+
+
+--------------------------------------------------------------------------------------------
+Deleting WellOwner
+
+Curl
+curl -X DELETE --header 'Accept: application/json' 'http://0.0.0.0:3000/api/org.gec.ebs.WellOwner/owner%40email.com'
+Request URL
+http://0.0.0.0:3000/api/org.gec.ebs.WellOwner/owner%40email.com
+Response Body
+no content
+Response Code
+204
+----------------------
+Deleting WellOperator
+
+Curl
+curl -X DELETE --header 'Accept: application/json' 'http://0.0.0.0:3000/api/org.gec.ebs.WellOperator/welloperator%40email.com'
+Request URL
+http://0.0.0.0:3000/api/org.gec.ebs.WellOperator/welloperator%40email.com
+Response Body
+no content
+Response Code
+204
+------------------------------------------------------------------------------------------
+
+how to check URL:
+http://0.0.0.0:3000/api/org.gec.ebs.WellShipment
+
+creating extra shipment with garbage
+Curl
+curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{ \ 
+   "$class": "org.gec.ebs.WellShipment", \ 
+   "shipmentId": "WSHIP_002", \ 
+   "owner": { \ 
+     "$class": "org.gec.ebs.WellOwner", \ 
+     "email": "string", \ 
+     "address": { \ 
+       "$class": "org.gec.ebs.Address", \ 
+       "city": "string", \ 
+       "country": "string", \ 
+       "street": "string", \ 
+       "postalcode": "string", \ 
+       "id": "string" \ 
+     } \ 
+   }, \ 
+   "wellcontract": "CONTRACT", \ 
+   "type": "OIL", \ 
+   "sensorReadings": [] \ 
+ }' 'http://0.0.0.0:3000/api/org.gec.ebs.WellShipment'
+
+Request URL
+http://0.0.0.0:3000/api/org.gec.ebs.WellShipment
+
+Response Body
+{
+  "$class": "org.gec.ebs.WellShipment",
+  "shipmentId": "WSHIP_002",
+  "owner": {
+    "$class": "org.gec.ebs.WellOwner",
+    "email": "string",
+    "address": {
+      "$class": "org.gec.ebs.Address",
+      "city": "string",
+      "country": "string",
+      "street": "string",
+      "postalcode": "string",
+      "id": "string"
+    }
+  },
+  "wellcontract": "CONTRACT",
+  "type": "OIL",
+  "sensorReadings": []
+}
+Response Code
+200
+
+-=================================================================================================
+url to check:"
+http://0.0.0.0:3000/api/org.gec.ebs.WellContract
+
+
+creating bogus WellContract
+
+Curl
+curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{ \ 
+   "$class": "org.gec.ebs.WellContract", \ 
+   "contractId": "WCON_002", \ 
+   "activestatus": false \ 
+ }' 'http://0.0.0.0:3000/api/org.gec.ebs.WellContract'
+Request URL
+http://0.0.0.0:3000/api/org.gec.ebs.WellContract
+Response Body
+{
+  "$class": "org.gec.ebs.WellContract",
+  "contractId": "WCON_002",
+  "activestatus": false
+}
+Response Code
+200
+
+
+=================================================================================================
+how to check:
+http://0.0.0.0:3000/api/org.gec.ebs.WellOwner
+
+curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{ "$class": "org.gec.ebs.WellContract", "contractId": "WCON_003", "activestatus": false }' 'http://0.0.0.0:3000/api/org.gec.ebs.WellContract'
+
+Request URL
+http://0.0.0.0:3000/api/org.gec.ebs.WellContract
+
+Response Body
+{
+  "$class": "org.gec.ebs.WellContract",
+  "contractId": "WCON_002",
+  "activestatus": false
+}
+
+
