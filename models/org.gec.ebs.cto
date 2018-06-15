@@ -1,111 +1,22 @@
 //gecebs9-network description
+//Author LT
+//Date	created	2018-05-02
+//Date	updated	2018-06-14
 
 namespace org.gec.ebs
 
-event SampleEvent {
-  //--> SampleAsset asset
-  o String oldValue
-  o String newValue
-}
-
-enum WellProductType {
-  o OIL
-  o GAS
-}
-
+//types of time that is recorded: Productive time, Non-Productive time, Unknown time
 enum WellProdTimeType {
   o PT
   o NPT
   o UNK
 }
-
-/* The status of a shipment */
-/*
-enum ShipmentStatus {
-  o CREATED
-  o IN_TRANSIT
-  o ARRIVED
+//type: oil, gas or unknowm
+enum WellProductType {
+  o OIL
+  o GAS
+  o UNK
 }
-*/
-/* An abstract transaction that is related to a Shipment */
-//abstract transaction ShipmentTransaction {
-//  --> Shipment shipment
-//}
-
-/**
- * An temperature reading for a shipment. E.g. received from a
- * device within a temperature controlled shipping container
- */
-//fyi: used in Well too
-/*
-transaction	TemperatureReading {
-  o Double		centigrade
-  //o DateTime	sensorReading
-  //--> Shipment	shipment
-}
-*/
-transaction	SensorReading {
-  o WellProdTimeType  fieldtimePTorNPTFlagYesNo
-  o DateTime		      fieldTimeStamp		optional
-  o Double			      fieldcentigrade		optional
-  --> WellShipment    wellshipment
-}
-
-/**
- * A notification that a shipment has been received by the
- * importer and that funds should be transferred from the importer
- * to the grower to pay for the shipment.
- */
-/*
-transaction ShipmentReceived {
-  --> Shipment shipment
-}
-*/
-/* A shipment being tracked as an asset on the ledger */
-/*
-asset Shipment identified by shipmentId {
-  o String shipmentId
-  o ProductType		type		optional	//LT added word
-  o ShipmentStatus	status		optional	//LT added word
-  o Long			unitCount	optional	//LT added word
-  o TemperatureReading[]		temperatureReadings	optional
-  --> Contract contract
-}
-*/
-asset WellShipment identified by shipmentId {
-  o String					shipmentId
-  o WellOwner				owner				optional
-  --> WellContract			wellcontract		optional
-  o WellProductType			type				optional
-  //o TemperatureReading[]	temperatureReadings	optional
-  o SensorReading[]			sensorReadings		optional
-}
-/*
-asset Contract identified by contractId {
-  o String contractId
-  //--> Grower grower
-  //--> Shipper shipper
-  //--> Importer importer
-  
-  o DateTime arrivalDateTime
-  o Double unitPrice
-  o Double minTemperature
-  o Double maxTemperature
-  o Double minPenaltyFactor
-  o Double maxPenaltyFactor
-}
-*/
-
-asset WellContract identified by contractId {
-  o String			contractId
-  o	Boolean			activestatus	optional	//active or not 
-  --> WellOwner		owner		optional
-  --> WellOperator	operator	optional
-  //startDate
-  //endDate
-  //wells[]
-}
-
 /* A concept for a simple street address */
 concept Address {
   o String	city			optional
@@ -118,15 +29,52 @@ concept Address {
 abstract participant Business identified by email {
   o String	email
   o Address	address
-//  o Double  accountBalance
 }
 
 participant	WellOwner		extends	Business {
 }
+participant	ServiceProvider	extends	Business {
+}
 
-participant	WellOperator	extends	Business {
+asset Well	identified by	wellId {
+  o String					wellId
+  o WellOwner				owner
+  --> WellContract			wellcontract		optional
+  o WellProductType			type				optional
+  o SensorReading[]			sensorReadings		optional
+}
+
+asset WellContract identified by wellcontractId {
+  o String				wellcontractId
+  o	Boolean				activestatus	optional	//active or not 
+  --> WellOwner			owner			optional
+  --> ServiceProvider	operator		optional
+  //startDate, endDate ?
+  //wells[]			WellShipment	optional	//array of wells that are included in/covered by the contract
+}
+transaction	SensorReading {
+  o WellProdTimeType	fieldtimePTorNPTFlagYesNo
+  o DateTime			fieldTimeStamp		optional
+  o Double				fieldcentigrade		optional
+  --> Well				well
 }
 
 /* JUST FOR INITIALIZING A DEMO */
 transaction SetupDemo {
 }
+
+//TODO
+//to be used in the future potentially : emitting event(s) and/or handling them
+event SampleEvent {
+  //--> SampleAsset asset
+  o String oldValue
+  o String newValue
+}
+//fyi: used in Well too
+/*
+transaction	TemperatureReading {
+  o Double		centigrade
+  //o DateTime	sensorReading
+  //--> Shipment	shipment
+}
+*/
